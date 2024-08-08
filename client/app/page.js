@@ -1,12 +1,9 @@
-import UploadPage from "@/pages/uploadPage";
-import Room from "@/pages/videoplayer";
-import Image from "next/image";
+import Room from "@/components/videoplayer";
 
 export default function Home() {
   return (
     <main>
-     {/* <Room /> */}
-     <UploadPage />
+     <Room />
     </main>
   );
 }
