@@ -1,6 +1,4 @@
 import AWS from 'aws-sdk';
-import fs from 'fs'
-
 
 // import * as maintenanceModeMessage from 'aws-sdk/lib/maintenance_mode_message.js';
 
