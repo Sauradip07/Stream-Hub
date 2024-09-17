@@ -14,7 +14,7 @@ const NavBar = () => {
        <div>
            <nav class="bg-white border-gray-200 dark:bg-gray-900">
                <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                   <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Educosys YouTube</span>
+                   <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Stream Hub</span>
                    <div class="hidden w-full md:block md:w-auto" id="navbar-default">
                        {
                            data ? (
@@ -37,7 +37,7 @@ const NavBar = () => {
                                        Hello {data.user.name}
                                    </span>
                                    <div className='m-3'>
-                                       <img class="w-10 h-10 rounded-full" src={data.user.image} alt="" />
+                                       <img class="w-10 h-10 rounded-full" src={"https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="} alt="profile-images" />
                                    </div>
                                </div>
 
