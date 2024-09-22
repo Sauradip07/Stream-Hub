@@ -1,90 +1,54 @@
+// upload.controller.js
+
 import AWS from 'aws-sdk';
 
-// import * as maintenanceModeMessage from 'aws-sdk/lib/maintenance_mode_message.js';
+const uploadFileToS3 = async (req, res) => {
+   console.log('Upload req received');
+   console.log(req.files);
 
-// maintenanceModeMessage.suppress = true;
+   if (!req.files || !req.files['chunk'] || !req.body['totalChunks'] || !req.body['chunkIndex']) {
+       console.log('Missing required data');
+       return res.status(400).send('Missing required data');
+   }
 
-// const uploadFileToS3 = async(req, res) => {
-  
-//    const filePath = './User/dsa.png';
-//    // Check if the file exists
-//    if (!fs.existsSync(filePath)) {
-//        console.log('File does not exist: ', filePath);
-//        return;
-//    }
+   const chunk = req.files['chunk'];
+   const filename = req.body['filename'];
+   const totalChunks = parseInt(req.body['totalChunks']);
+   const chunkIndex = parseInt(req.body['chunkIndex']);
+   console.log(filename);
 
-//    process.env.AWS_SDK_JS_SUPPRESS_MAINTENANCE_MODE_MESSAGE = '1';
-//    AWS.config.update({
-//        region: 'eu-north-1',
-//        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-//    });
+   console.log(chunk[0].buffer);
 
 
-//    const params = {
-//        Bucket: process.env.AWS_BUCKET,
-//        Key: 'dsa.png',
-//        Body: fs.createReadStream(filePath)
-//    };
+   AWS.config.update({
+       region: 'eu-north-1',
+       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+   });
 
+   if (req.body.totalChunks && req.body.chunkIndex !== undefined) {
+       const params = {
+           Bucket: process.env.AWS_BUCKET,
+           Key: `${filename}_${chunkIndex}`, // Use a unique key for each chunk
+           Body: chunk[0].buffer
+       };
 
-//    const s3 = new AWS.S3();
+       const s3 = new AWS.S3();
 
+       // Upload the chunk to S3
+       s3.upload(params, (err, data) => {
+           if (err) {
+               console.log('Error uploading chunk:', err);
+               res.status(500).send('Chunk could not be uploaded');
+           } else {
+               console.log('Chunk uploaded successfully. Location:', data.Location);
+               res.status(200).send('Chunk uploaded successfully');
+           }
+       });
+   } else {
+       console.log('Missing chunk metadata');
+       res.status(400).send('Missing chunk metadata');
+   }
+}
 
-//    // Upload the file to S3
-//    s3.upload(params, (err, data) => {
-//        if (err) {
-//            console.log('Error uploading file:', err);
-//            res.status(404).send('File could not be uploaded!');
-//        } else {
-//            console.log('File uploaded successfully. File location:', data.Location);
-//            res.status(200).send('File uploaded successfully');
-//        }
-//    });
-// }
-
-
-// export default uploadFileToS3;
-
-
-
-
-const uploadFileToS3 = async(req, res) => {
-    console.log('Upload req received');
-   
-    if (!req.file) {
-        console.log('No file received');
-        return res.status(400).send('No file received');
-    }
-    const file = req.file;
- 
- 
-    AWS.config.update({
-        region: 'eu-north-1',
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-    });
- 
- 
-    const params = {
-        Bucket: process.env.AWS_BUCKET,
-        Key: file.originalname,
-        Body: file.buffer
-    };
- 
- 
-    const s3 = new AWS.S3();
-    s3.upload(params, (err, data) => {
-        if (err) {
-            console.log('Error uploading file:', err);
-            res.status(404).send('File could not be uploaded!');
-        } else {
-            console.log('File uploaded successfully. File location:', data.Location);
-            console.log('\n Upload file is:', file);
-            res.status(200).send('File uploaded successfully');
-            
-        }
-    });}
- 
- 
- export default uploadFileToS3;
+export default uploadFileToS3;
