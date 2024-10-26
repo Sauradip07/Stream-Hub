@@ -42,7 +42,7 @@ export const uploadChunk = async (req, res) => {
        const s3 = new AWS.S3({
            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-           region: 'ap-south-1'
+           region: 'eu-north-1'
        });
        const bucketName = process.env.AWS_BUCKET;
 
